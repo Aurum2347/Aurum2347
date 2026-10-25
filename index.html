@@ -1,117 +1,480 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сайт в разработке</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #09090b;
-            color: #fafafa;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            overflow: hidden;
-        }
-
-        .alert-container {
-            width: 100%;
-            max-width: 480px;
-        }
-
-        .alert {
-            background-color: #18181b;
-            border: 1px solid #27272a;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .alert:hover {
-            border-color: #3f3f46;
-            box-shadow: 0 0 24px rgba(255, 255, 255, 0.04);
-        }
-
-        .alert-icon {
-            flex-shrink: 0;
-            width: 1rem;
-            height: 1rem;
-            color: #fafafa;
-            margin-top: 0.125rem;
-            animation: pulse 2.5s infinite ease-in-out;
-        }
-
-        .alert-content {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .alert-title {
-            font-size: 0.875rem;
-            font-weight: 600;
-            line-height: 1.25;
-            letter-spacing: -0.01em;
-        }
-
-        .alert-description {
-            font-size: 0.875rem;
-            color: #a1a1aa;
-            line-height: 1.5;
-        }
-
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.15);
-                opacity: 0.7;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#09090b">
+<title>Aurum2347</title>
+<meta name="description" content="Aurum2347 - рендеры в Minecraft (Minimate), Playly, Memora, JustConvert и другие проекты. Соцсети и контакты.">
+<link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2309090b'/%3E%3Ctext x='32' y='44' font-family='monospace' font-size='34' font-weight='700' text-anchor='middle' fill='%23fafafa'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script src="script.js"></script>
 </head>
 <body>
 
-    <div class="alert-container">
-        <div class="alert">
-            <svg class="alert-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-            
-            <div class="alert-content">
-                <h5 class="alert-title">Сайт в разработке</h5>
-                <div class="alert-description">
-                    Мы усердно работаем над созданием чего-то нового и крутого. Пожалуйста, заходите немного позже!
-                </div>
-            </div>
+<div class="bg" aria-hidden="true">
+  <canvas id="bgCanvas"></canvas>
+  <div class="bg-orb o1"></div>
+  <div class="bg-orb o2"></div>
+  <div class="bg-grain"></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-tg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 3.3c-.3-.3-.8-.3-1.1-.2L2.9 10.4c-.8.3-.7 1.4.1 1.6l4 1.2 1.5 4.8c.2.8 1.3.9 1.7.2l2.2-3.4 4.5 3.3c.6.4 1.5.1 1.7-.7l3-12.9c.1-.4 0-.9-.2-1.2z"/></symbol>
+    <symbol id="i-channel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></symbol>
+    <symbol id="i-reddit" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12S5.65 23.5 12 23.5 23.5 18.35 23.5 12 18.35.5 12 .5zm5.01 9.59c.34 0 .61.27.61.61 0 .19-.09.35-.23.46.05.16.07.32.07.49 0 1.62-1.95 2.93-4.35 2.93s-4.35-1.31-4.35-2.93c0-.17.03-.33.07-.48-.14-.11-.24-.28-.24-.48 0-.33.27-.6.61-.6.15 0 .29.05.4.15.72-.5 1.7-.82 2.8-.85l.61-2.9 2.02.43c.06-.16.21-.27.38-.27.22 0 .4.18.4.4s-.18.4-.4.4c-.19 0-.36-.14-.39-.32l-1.79-.38-.55 2.58c1.1.03 2.09.35 2.82.85.1-.09.24-.14.39-.14zM9 12.5c-.35 0-.63-.28-.63-.63s.28-.62.63-.62.62.28.62.62-.28.63-.62.63zm4.42 1.93c-.33.33-1.03.36-1.42.36s-1.09-.03-1.42-.36c-.06-.06-.06-.16 0-.22.06-.06.16-.06.22 0 .22.22.74.26 1.2.26s.98-.04 1.2-.26c.06-.06.16-.06.22 0 .06.06.06.16 0 .22zM15 12.5c-.35 0-.63-.28-.63-.63s.28-.62.63-.62.62.28.62.62-.28.63-.62.63z"/></symbol>
+    <symbol id="i-youtube" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5c-.3-1-1-1.8-2-2C19.2 5 12 5 12 5s-7.2 0-9 .5c-1 .3-1.8 1-2 2-.5 1.8-.5 4.5-.5 4.5s0 2.7.5 4.5c.3 1 1 1.8 2 2 1.8.5 9 .5 9 .5s7.2 0 9-.5c1-.3 1.8-1 2-2 .5-1.8.5-4.5.5-4.5s0-2.7-.5-4.5zM9.7 15V9l5.8 3z"/></symbol>
+    <symbol id="i-tiktok" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.3 0 .6.04.88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3C5.4.3 0 5.7 0 12.3c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11 11 0 0 1 5.8 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12.3 12.3 0 0 0 24 12.3C24 5.7 18.6.3 12 .3z"/></symbol>
+
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 6 6L20 6"/></symbol>
+    <symbol id="i-err" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M6 18 18 6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
+    <symbol id="i-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5"/><path d="M12 22V12"/></symbol>
+    <symbol id="i-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1"/><rect x="9" y="9" width="6" height="6"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="8.5" cy="7.5" r="1.5"/><path d="M12 7.5h4M8 12h8M8 16h5"/></symbol>
+    <symbol id="i-convert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h13M14 4l3 3-3 3M20 17H7M10 14l-3 3 3 3"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c3.9 0 7-2.8 7-6.8 0-3.6-2.4-5.6-3.6-8.2-.9 1.8-1.9 2.7-3 2.9.3-2.6-.6-5.2-2.9-7.9-.4 4.2-5.5 6.6-5.5 13.2 0 4 3.1 6.8 8 6.8z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></symbol>
+    <symbol id="i-question" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M10 9.5a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2v.5M12 16h.01"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="m2 7 10 6 10-6"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  </defs>
+</svg>
+
+<main class="page">
+
+  <section class="hero" id="about">
+
+    <div class="id rv">
+      <div class="id-top">
+        <div class="avatar-ring">
+          <div class="avatar" data-avatar><span class="mono">A</span></div>
         </div>
+        <div class="id-meta mono">
+          <span class="id-handle">@aurum2347</span>
+          <span class="id-sub">UTC+3 · <b id="clkShort">--:--</b> · <span id="dayPartShort">-</span></span>
+        </div>
+        <div class="id-tools">
+          <button class="btn icon outline" id="cmdOpen" aria-label="Команды (Ctrl K)" title="Команды · Ctrl K"><svg><use href="#i-search"/></svg></button>
+          <button class="btn icon outline" id="themeBtn" aria-label="Сменить тему" title="Сменить тему">
+            <svg class="i-moon"><use href="#i-moon"/></svg><svg class="i-sun"><use href="#i-sun"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <h1>Aurum2347</h1>
+      <p class="lead">Вайбкодер. <span class="mark">Логика и архитектура на мне</span>, рутину забирает ИИ. На выходе - работает, красиво и без критичных багов.</p>
+
+      <div class="actions">
+        <a class="btn primary lg shine" href="https://t.me/aurum2347" target="_blank" rel="noopener"><svg><use href="#i-tg"/></svg>Написать в Telegram</a>
+        <a class="btn outline lg" href="#renders"><svg><use href="#i-cube"/></svg>Мои рендеры</a>
+      </div>
     </div>
+
+    <div class="card socials beam rv" id="contact" style="--d:60ms">
+      <div class="card-h">
+        <div>
+          <h2>Соцсети</h2>
+          <p>Быстрее всего - Telegram. Почту не читаю.</p>
+        </div>
+        <button class="btn sm ghost" id="copyAll" title="Скопировать все контакты"><svg><use href="#i-copy"/></svg>Все</button>
+      </div>
+
+      <ul class="soc-list">
+        <li class="soc main" data-name="Telegram · ЛС" data-handle="@aurum2347" data-copy="@aurum2347" data-url="https://t.me/aurum2347" data-icon="i-tg">
+          <span class="soc-i"><svg><use href="#i-tg"/></svg></span>
+          <a class="soc-b" href="https://t.me/aurum2347" target="_blank" rel="noopener"><b>Telegram · ЛС</b><span class="mono">@aurum2347</span></a>
+          <span class="badge soc-tag">быстрый ответ</span>
+          <span class="soc-a">
+            <button class="btn icon ghost sm" data-qr title="QR-код" aria-label="QR-код Telegram ЛС"><svg><use href="#i-qr"/></svg></button>
+            <button class="btn icon ghost sm" data-copy="@aurum2347" data-label="Telegram · ЛС" title="Скопировать" aria-label="Скопировать Telegram ЛС"><svg><use href="#i-copy"/></svg></button>
+          </span>
+        </li>
+        <li class="soc" data-name="Telegram · канал" data-handle="@aurums2347" data-copy="@aurums2347" data-url="https://t.me/aurums2347" data-icon="i-channel">
+          <span class="soc-i"><svg><use href="#i-channel"/></svg></span>
+          <a class="soc-b" href="https://t.me/aurums2347" target="_blank" rel="noopener"><b>Telegram · канал</b><span class="mono">@aurums2347</span></a>
+          <span class="soc-a">
+            <button class="btn icon ghost sm" data-qr title="QR-код" aria-label="QR-код Telegram-канала"><svg><use href="#i-qr"/></svg></button>
+            <button class="btn icon ghost sm" data-copy="@aurums2347" data-label="Telegram · канал" title="Скопировать" aria-label="Скопировать Telegram-канал"><svg><use href="#i-copy"/></svg></button>
+          </span>
+        </li>
+        <li class="soc" data-name="YouTube" data-handle="@aurumm2347" data-copy="https://www.youtube.com/@aurumm2347" data-url="https://www.youtube.com/@aurumm2347" data-icon="i-youtube">
+          <span class="soc-i"><svg><use href="#i-youtube"/></svg></span>
+          <a class="soc-b" href="https://www.youtube.com/@aurumm2347" target="_blank" rel="noopener"><b>YouTube</b><span class="mono">@aurumm2347</span></a>
+          <span class="soc-a">
+            <button class="btn icon ghost sm" data-qr title="QR-код" aria-label="QR-код YouTube"><svg><use href="#i-qr"/></svg></button>
+            <button class="btn icon ghost sm" data-copy="https://www.youtube.com/@aurumm2347" data-label="YouTube" title="Скопировать" aria-label="Скопировать YouTube"><svg><use href="#i-copy"/></svg></button>
+          </span>
+        </li>
+        <li class="soc" data-name="TikTok" data-handle="@aurum2347" data-copy="@aurum2347" data-url="https://www.tiktok.com/@aurum2347" data-icon="i-tiktok">
+          <span class="soc-i"><svg><use href="#i-tiktok"/></svg></span>
+          <a class="soc-b" href="https://www.tiktok.com/@aurum2347" target="_blank" rel="noopener"><b>TikTok</b><span class="mono">@aurum2347</span></a>
+          <span class="soc-a">
+            <button class="btn icon ghost sm" data-qr title="QR-код" aria-label="QR-код TikTok"><svg><use href="#i-qr"/></svg></button>
+            <button class="btn icon ghost sm" data-copy="@aurum2347" data-label="TikTok" title="Скопировать" aria-label="Скопировать TikTok"><svg><use href="#i-copy"/></svg></button>
+          </span>
+        </li>
+        <li class="soc" data-name="Reddit" data-handle="r/aurums2347" data-copy="https://www.reddit.com/r/aurums2347/" data-url="https://www.reddit.com/r/aurums2347/" data-icon="i-reddit">
+          <span class="soc-i"><svg><use href="#i-reddit"/></svg></span>
+          <a class="soc-b" href="https://www.reddit.com/r/aurums2347/" target="_blank" rel="noopener"><b>Reddit</b><span class="mono">r/aurums2347</span></a>
+          <span class="soc-a">
+            <button class="btn icon ghost sm" data-qr title="QR-код" aria-label="QR-код Reddit"><svg><use href="#i-qr"/></svg></button>
+            <button class="btn icon ghost sm" data-copy="https://www.reddit.com/r/aurums2347/" data-label="Reddit" title="Скопировать" aria-label="Скопировать Reddit"><svg><use href="#i-copy"/></svg></button>
+          </span>
+        </li>
+        <li class="soc" data-name="GitHub" data-handle="aurum2347" data-copy="https://github.com/aurum2347" data-url="https://github.com/aurum2347" data-icon="i-github">
+          <span class="soc-i"><svg><use href="#i-github"/></svg></span>
+          <a class="soc-b" href="https://github.com/aurum2347" target="_blank" rel="noopener"><b>GitHub</b><span class="mono">aurum2347</span></a>
+          <span class="soc-a">
+            <button class="btn icon ghost sm" data-qr title="QR-код" aria-label="QR-код GitHub"><svg><use href="#i-qr"/></svg></button>
+            <button class="btn icon ghost sm" data-copy="https://github.com/aurum2347" data-label="GitHub" title="Скопировать" aria-label="Скопировать GitHub"><svg><use href="#i-copy"/></svg></button>
+          </span>
+        </li>
+      </ul>
+
+      <div class="card-f">
+        <svg><use href="#i-mail"/></svg>
+        <span>По вечерам ЛС читаю гарантированно. Контент для канала - в предложку <b class="mono">@aurums2347</b>.</span>
+      </div>
+    </div>
+
+    <div class="card about spot rv" style="--d:120ms">
+      <p class="about-t">
+        Мне 19 лет, студентом 4-го курса живётся не так, как я раньше представлял -
+        <b>не сахар, но и не грязь</b>. Да, я вайбкодер, но предпочитаю не делать абы как,
+        а чтобы получалось <span class="mark">качественно и красиво</span>. Этот сайт тоже сделан по большей части
+        с помощью ИИ - <i>но структура, тексты и контроль мои</i>.
+      </p>
+      <div class="cells">
+        <button class="cell clickable" id="tzOpen" title="Сравнить с твоим временем">
+          <span class="k">Сейчас у меня</span>
+          <span class="v mono"><span id="clkFull">--:--</span><small id="dayPart">-</small></span>
+        </button>
+        <div class="cell"><span class="k">Возраст</span><span class="v">19<small>→ 20 · 02.01</small></span></div>
+        <div class="cell"><span class="k">Курс</span><span class="v">4<small>/ 4 · Разработка ПО</small></span></div>
+        <div class="cell"><span class="k">Проектов</span><span class="v" id="projTotal">8<small>и растёт</small></span></div>
+      </div>
+    </div>
+
+  </section>
+
+  <article class="card showcase beam rv" id="renders" data-title="Minimate" data-hint="рендеры Minecraft" data-url="https://aurum2347.github.io/Minimate/" data-icon="i-cube">
+    <div class="sc-text">
+      <div class="sc-kicker">
+        <span class="badge solid"><span class="dot pulse"></span>Главное</span>
+        <span class="eyebrow mono">Minecraft · Mine-Imator</span>
+      </div>
+      <h2 class="sc-title">Мои рендеры<br>в Minecraft</h2>
+      <p class="txt">Все мои последние работы собраны на <b>Minimate</b>: рендеры и анимации из <b>Mine-Imator</b>, а к ним <span class="mark">исходники, которые можно скачать</span> и разобрать, как сделана каждая работа. Сам сайт оформлен под minecraft.net - ну или хотя бы пытается.</p>
+      <ul class="sc-feats">
+        <li><span class="px"></span><b>Рендеры</b><span>последние работы</span></li>
+        <li><span class="px"></span><b>Анимации</b><span>смотреть онлайн</span></li>
+        <li><span class="px"></span><b>Исходники</b><span>скачать и разобрать</span></li>
+      </ul>
+      <div class="actions">
+        <a href="https://aurum2347.github.io/Minimate/" target="_blank" rel="noopener" class="btn mc"><svg><use href="#i-cube"/></svg>Смотреть рендеры</a>
+        <button class="btn ghost" data-copy="https://aurum2347.github.io/Minimate/" data-label="Minimate"><svg><use href="#i-copy"/></svg>Ссылка</button>
+      </div>
+    </div>
+    <a class="sc-visual" href="https://aurum2347.github.io/Minimate/" target="_blank" rel="noopener" aria-label="Открыть Minimate">
+      <span class="sc-tag mono"><span class="dot pulse"></span>minimate · live</span>
+      <span class="mc-scene" aria-hidden="true">
+        <span class="mc-float">
+          <span class="mc-cube" id="mcCube">
+            <span class="f-top"></span><span class="f-bottom"></span>
+            <span class="f-front"></span><span class="f-back"></span>
+            <span class="f-left"></span><span class="f-right"></span>
+          </span>
+        </span>
+        <span class="mc-glow"></span>
+        <span class="mc-bit b1"></span><span class="mc-bit b2"></span><span class="mc-bit b3"></span><span class="mc-bit b4"></span><span class="mc-bit b5"></span>
+      </span>
+      <span class="sc-caption mono">aurum2347.github.io/Minimate <svg><use href="#i-ext"/></svg></span>
+    </a>
+  </article>
+
+  <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
+
+  <section class="sec" id="projects">
+    <div class="sec-h rv" data-n="01">
+      <span class="eyebrow mono">01 · Проекты</span>
+      <h2>Над чем работаю</h2>
+      <p>От оффлайн-плеера до активации угля. В активной разработке - <span class="mark">Playly</span>.</p>
+    </div>
+
+    <article class="card featured rv" style="--d:50ms" data-title="Playly" data-hint="2.0.3 snapshot" data-url="https://aurum2347.github.io/Playly/" data-icon="i-music">
+      <div class="feat-main">
+        <div class="feat-top">
+          <span class="proj-i lg"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
+          <div>
+            <span class="badge solid"><span class="dot pulse"></span>В активной разработке</span>
+            <h3>Playly <span class="badge outline mono">2.0.3 · Snapshot</span></h3>
+          </div>
+        </div>
+        <p class="txt">Оффлайн-музыкальный плеер, оформленный под современные реалии. Идея простая: <span class="mark">если трек официально можно скачать - зачем платить за подписку?</span> В 2026-м вся музыка в онлайне, и для прослушивания нужны интернет и деньги. Spotify и Яндекс Музыка требуют подписку, KMPlayer и AIMP морально устарели и перегружены.</p>
+        <p class="txt"><i>Текущая сборка - снапшот 2.0.3: промежуточная версия, на которой обкатывается новый функционал. Возможны шероховатости - правлю по ходу.</i></p>
+        <div class="tags"><span class="badge">Музыка</span><span class="badge">Оффлайн</span><span class="badge">Desktop</span><span class="badge outline mono">vanilla-js</span></div>
+        <div class="code">
+          <div class="code-h mono"><span class="dots"><i></i><i></i><i></i></span>идеология.txt</div>
+<pre class="mono"><span class="c">// почему оффлайн</span>
+онлайн   → нужен интернет + подписка
+AIMP     → устарел, перегружен
+KMPlayer → то же самое
+<span class="k">playly</span>   → скачал легально → слушаешь без денег и сети</pre>
+        </div>
+        <div class="actions">
+          <a href="https://aurum2347.github.io/Playly/" target="_blank" rel="noopener" class="btn primary shine"><svg><use href="#i-ext"/></svg>Открыть Playly</a>
+          <button class="btn outline" data-copy="https://aurum2347.github.io/Playly/" data-label="Playly"><svg><use href="#i-copy"/></svg>Копировать ссылку</button>
+        </div>
+      </div>
+      <aside class="spec">
+        <div class="spec-h mono"><svg><use href="#i-list"/></svg>Спецификация</div>
+        <div class="spec-r"><span class="k">Тип</span><span class="v">Desktop-плеер</span></div>
+        <div class="spec-r"><span class="k">Версия</span><span class="v mono">2.0.3</span></div>
+        <div class="spec-r"><span class="k">Канал</span><span class="v mono">snapshot</span></div>
+        <div class="spec-r"><span class="k">Стек</span><span class="v">Vanilla JS</span></div>
+        <div class="spec-r"><span class="k">Нужна сеть</span><span class="v">нет</span></div>
+        <div class="spec-r"><span class="k">Подписки</span><span class="v">не нужны</span></div>
+        <div class="spec-r"><span class="k">Связка</span><span class="v">Memora · в планах</span></div>
+        <div class="spec-r"><span class="k">Статус</span><span class="v"><span class="badge solid"><span class="dot"></span>активная разработка</span></span></div>
+      </aside>
+    </article>
+
+    <div class="proj-bar rv" style="--d:40ms">
+      <div class="tabs" id="projFilter" role="tablist">
+        <button class="tab on" data-f="all">Все<span class="n"></span></button>
+        <button class="tab" data-f="app">Приложения<span class="n"></span></button>
+        <button class="tab" data-f="mc">Minecraft<span class="n"></span></button>
+        <button class="tab" data-f="fun">Фан<span class="n"></span></button>
+      </div>
+    </div>
+
+    <div class="proj-grid" id="projGrid">
+
+      <article class="card proj spot rv" data-cat="app" data-title="Memora" data-hint="заметки-посты" data-url="https://github.com/Aurum2347/Memora" data-icon="i-note">
+        <div class="proj-top">
+          <span class="proj-i"><svg><use href="#i-note"/></svg></span>
+          <h3>Memora</h3>
+          <span class="badge outline"><span class="dot"></span>ранняя версия</span>
+        </div>
+        <p class="txt">Приложение для простых заметок, оформленных <b>под посты</b>. Сделано на коленках - дальше будет обновляться и получит <span class="mark">синхронизацию «аккаунтов» с Playly</span>.</p>
+        <div class="tags"><span class="badge">Заметки</span><span class="badge">Приложение</span><span class="badge outline mono">sync → playly</span></div>
+        <div class="actions">
+          <a href="https://github.com/Aurum2347/Memora" target="_blank" rel="noopener" class="btn outline sm"><svg><use href="#i-github"/></svg>GitHub</a>
+          <button class="btn ghost sm" data-copy="https://github.com/Aurum2347/Memora" data-label="Memora"><svg><use href="#i-copy"/></svg>Ссылка</button>
+        </div>
+      </article>
+
+      <article class="card proj spot rv" data-cat="app" data-title="JustConvert" data-hint="mp4 → аудио" data-url="https://aurum2347.github.io/JustConvert" data-icon="i-convert">
+        <div class="proj-top">
+          <span class="proj-i"><svg><use href="#i-convert"/></svg></span>
+          <h3>JustConvert</h3>
+          <span class="badge outline"><span class="dot"></span>live</span>
+        </div>
+        <p class="txt">Микро-сайт-инструмент: конвертирует <b>MP4 до 50 МБ</b> в один из четырёх аудиоформатов. Закинул видео - забрал звук.</p>
+        <div class="flow mono" aria-label="mp4 в mp3, wav, ogg или webm">
+          <span class="flow-in">.mp4</span><svg><use href="#i-arrow"/></svg>
+          <span class="flow-out"><span>mp3</span><span>wav</span><span>ogg</span><span>webm</span></span>
+        </div>
+        <div class="tags"><span class="badge">Инструмент</span><span class="badge">Аудио</span><span class="badge outline mono">≤ 50 MB</span></div>
+        <div class="actions">
+          <a href="https://aurum2347.github.io/JustConvert" target="_blank" rel="noopener" class="btn outline sm"><svg><use href="#i-ext"/></svg>Открыть</a>
+          <button class="btn ghost sm" data-copy="https://aurum2347.github.io/JustConvert" data-label="JustConvert"><svg><use href="#i-copy"/></svg>Ссылка</button>
+        </div>
+      </article>
+
+      <article class="card proj spot paused rv" data-cat="mc" data-title="Теоретический майнкрафт" data-hint="на паузе" data-url="https://aurum2347.github.io/Theoretical-thoughts/" data-icon="i-book">
+        <div class="proj-top">
+          <span class="proj-i"><svg><use href="#i-book"/></svg></span>
+          <h3>Теоретический майнкрафт</h3>
+          <span class="badge outline dashed"><svg><use href="#i-pause"/></svg>на паузе</span>
+        </div>
+        <p class="txt">Проект с потенциалом: <span class="mark">изучать и объяснять Minecraft на теории</span> - разбирать, что и как устроено. Разработка приостановлена из-за других проектов.</p>
+        <div class="tags"><span class="badge">Minecraft</span><span class="badge">Теория</span><span class="badge outline mono">theoretical-thoughts</span></div>
+        <div class="actions">
+          <a href="https://aurum2347.github.io/Theoretical-thoughts/" target="_blank" rel="noopener" class="btn outline sm"><svg><use href="#i-ext"/></svg>Открыть</a>
+          <button class="btn ghost sm" data-copy="https://aurum2347.github.io/Theoretical-thoughts/" data-label="Теоретический майнкрафт"><svg><use href="#i-copy"/></svg>Ссылка</button>
+        </div>
+      </article>
+
+      <article class="card proj spot rv" data-cat="fun" data-title="Square" data-hint="браузерная игра" data-url="https://aurum2347.github.io/square/" data-icon="i-square">
+        <div class="proj-top">
+          <span class="proj-i"><svg><use href="#i-square"/></svg></span>
+          <h3>Square</h3>
+          <span class="badge outline"><span class="dot"></span>playable</span>
+        </div>
+        <p class="txt">Игра за один вечер: влезет ли лабиринт с bullet-hell'ом в <span class="mark">один HTML-файл без библиотек</span>? Влез. 25 уровней, 5 боссов, 7 способностей - от рывка до парирования.</p>
+        <div class="tags"><span class="badge">Игра</span><span class="badge">Bullet-hell</span><span class="badge outline mono">0 deps</span></div>
+        <div class="actions">
+          <a href="https://aurum2347.github.io/square/" target="_blank" rel="noopener" class="btn outline sm"><svg><use href="#i-play"/></svg>Играть</a>
+          <button class="btn ghost sm" data-copy="https://aurum2347.github.io/square/" data-label="Square"><svg><use href="#i-copy"/></svg>Ссылка</button>
+        </div>
+      </article>
+
+      <article class="card proj spot rv" data-cat="fun" data-title="Что то?" data-hint="фан · 3D" data-url="https://aurum2347.github.io/something/" data-icon="i-question">
+        <div class="proj-top">
+          <span class="proj-i spin3d"><svg><use href="#i-question"/></svg></span>
+          <h3>Что то?</h3>
+          <span class="badge outline"><span class="dot"></span>3D</span>
+        </div>
+        <p class="txt">Мини фан-прикол в 3D. <span class="mark">Не ищите там смысла - его там нету.</span></p>
+        <div class="tags"><span class="badge">Фан</span><span class="badge">3D</span><span class="badge outline mono">something</span></div>
+        <div class="actions">
+          <a href="https://aurum2347.github.io/something/" target="_blank" rel="noopener" class="btn outline sm"><svg><use href="#i-ext"/></svg>Посмотреть</a>
+          <button class="btn ghost sm" data-copy="https://aurum2347.github.io/something/" data-label="Что то?"><svg><use href="#i-copy"/></svg>Ссылка</button>
+        </div>
+      </article>
+
+      <article class="card proj spot rv" data-cat="fun" data-title="Coal" data-hint="активировать уголь" data-url="https://aurum2347.github.io/coal" data-icon="i-flame">
+        <div class="proj-top">
+          <span class="proj-i flicker"><svg><use href="#i-flame"/></svg></span>
+          <h3>Coal</h3>
+          <span class="badge outline"><span class="dot"></span>шутка</span>
+        </div>
+        <p class="txt">Шуточный сайт, на котором можно <span class="mark caps">АКТИВИРОВАТЬ УГОЛЬ</span>. Да, именно это.</p>
+        <div class="tags"><span class="badge">Фан</span><span class="badge outline mono">coal</span></div>
+        <div class="actions">
+          <a href="https://aurum2347.github.io/coal" target="_blank" rel="noopener" class="btn outline sm"><svg><use href="#i-flame"/></svg>Активировать</a>
+          <button class="btn ghost sm" data-copy="https://aurum2347.github.io/coal" data-label="Coal"><svg><use href="#i-copy"/></svg>Ссылка</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="sec" id="stack">
+    <div class="sec-h rv" data-n="02">
+      <span class="eyebrow mono">02 · Стек</span>
+      <h2>Инструменты</h2>
+      <p>Не знаю всё наизусть. <span class="mark">Знаю принцип</span> - синтаксис подтягиваю под задачу.</p>
+    </div>
+    <div class="tabs rv" id="stackFilter" role="tablist" style="--d:50ms"></div>
+    <div class="card table-wrap rv" style="--d:90ms">
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th style="width:34%">Технология</th><th style="width:20%">Категория</th><th>Уровень</th><th style="width:14%">Статус</th></tr></thead>
+          <tbody id="stackBody"></tbody>
+        </table>
+      </div>
+      <div class="table-f mono"><span id="stackCount">-</span><span>сортировка: уровень ↓</span></div>
+    </div>
+  </section>
+
+  <section class="sec" id="philosophy">
+    <div class="sec-h rv" data-n="03">
+      <span class="eyebrow mono">03 · Философия</span>
+      <h2>Как я работаю</h2>
+      <p>Четыре вещи, которые важны, когда я сажусь за код.</p>
+    </div>
+
+    <div class="alert rv" style="--d:40ms">
+      <svg><use href="#i-info"/></svg>
+      <div><b>Почему вайбкодинг - это нормально.</b> Для меня это простое сокращение времени. Нет лишних часов, чтобы учить синтаксис каждого стека с нуля. Я беру инструмент под задачу, а <span class="mark">логику, архитектуру и баги</span> держу на себе.</div>
+    </div>
+
+    <div class="card accordion rv" id="acc" style="--d:80ms">
+      <div class="acc-i open">
+        <button class="acc-t" aria-expanded="true"><span class="n mono">01</span>ИИ - инструмент, а не разум<svg class="cv"><use href="#i-chev"/></svg></button>
+        <div class="acc-b"><div class="acc-c">Да, я вайбкодер, но подхожу к этому делу крайне ответственно. В отличие от стереотипных вайбкодеров, которые делают проекты абы как, я <b>кучу раз переделываю</b>, пока не приду к результату, который меня устраивает. ИИ - инструмент, который даёт делать проекты, не изучая часами синтаксис. А я <i>отвечаю за процесс и логику проекта</i>.<blockquote class="mono">Вайбкодинг - это не про то, чтобы не <b>УЧИТЬ</b> код.<br>Это про то, чтобы думать на уровне <b>архитектуры</b>, а не <b>синтаксиса</b>.</blockquote></div></div>
+      </div>
+      <div class="acc-i">
+        <button class="acc-t" aria-expanded="false"><span class="n mono">02</span>Главное - чтобы и работало, и было красиво<svg class="cv"><use href="#i-chev"/></svg></button>
+        <div class="acc-b"><div class="acc-c">С ИИ легко скатиться в «ну, работает же». Я так не хочу. Продукт должен быть не просто рабочим, но и <b>приятным глазу</b>. Красивый интерфейс - не украшение поверх логики, а часть продукта. Работает и выглядит хорошо - вот это <i>нормальный результат</i>.<blockquote class="mono">Красивый интерфейс - это тоже функциональность.</blockquote></div></div>
+      </div>
+      <div class="acc-i">
+        <button class="acc-t" aria-expanded="false"><span class="n mono">03</span>Я не зацикливаюсь на определённом стеке<svg class="cv"><use href="#i-chev"/></svg></button>
+        <div class="acc-b"><div class="acc-c">Стек для меня не что-то статичное, а <b>выбор оптимизации и работы</b>. Могу писать на том, что удобнее под задачу, - будь то Angular или TypeScript. Главное, чтобы результат был <i>стабильным и оптимизированным</i>. Если нужна незнакомая технология - осваиваю по ходу, с ИИ это дни, а не месяцы.<blockquote class="mono">Стек - это инструмент. Не идентичность.</blockquote></div></div>
+      </div>
+      <div class="acc-i">
+        <button class="acc-t" aria-expanded="false"><span class="n mono">04</span>Важен РЕЗУЛЬТАТ, а не «почти готово»<svg class="cv"><use href="#i-chev"/></svg></button>
+        <div class="acc-b"><div class="acc-c">Стараюсь не бросать проекты на полуслове. Да, есть проекты, которые требуют обновлений или доделки, - но как итог я всегда выставляю <b>РЕЗУЛЬТАТ</b>. Не «почти», не «вроде», не «должно работать».<blockquote class="mono">Начал дело - доводи до конца.</blockquote></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot mono">
+    <span class="foot-l"><span class="avatar xs" data-avatar><span>A</span></span>© 2026 Aurum2347</span>
+    <span class="foot-r">
+      <a href="#contact">Соцсети</a>
+      <a href="#renders">Рендеры</a>
+      <a href="#projects">Проекты</a>
+      <button id="cmdOpen2">Команды <kbd>Ctrl K</kbd></button>
+    </span>
+  </footer>
+
+</main>
+
+<div class="overlay cmdk" id="cmdk" aria-hidden="true">
+  <div class="overlay-bg" data-close></div>
+  <div class="cmdk-box" role="dialog" aria-label="Команды">
+    <div class="cmdk-in">
+      <svg><use href="#i-search"/></svg>
+      <input type="text" id="cmdInput" placeholder="Соцсети, проекты, действия…" autocomplete="off" spellcheck="false">
+      <kbd>ESC</kbd>
+    </div>
+    <div class="cmdk-list" id="cmdList"></div>
+    <div class="cmdk-f mono"><span><kbd>↑</kbd><kbd>↓</kbd> навигация</span><span><kbd>↵</kbd> выбрать</span><span><kbd>esc</kbd> закрыть</span></div>
+  </div>
+</div>
+
+<div class="overlay dialog" id="tzDlg" aria-hidden="true">
+  <div class="overlay-bg" data-close></div>
+  <div class="dlg-box" role="dialog" aria-labelledby="tzTitle">
+    <div class="dlg-h">
+      <h3 id="tzTitle">Часовые пояса</h3>
+      <button class="btn icon ghost sm" data-close aria-label="Закрыть"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="dlg-c">
+      <div class="tz-grid">
+        <div class="tz"><div class="tz-h mono"><span>У меня · UTC+3</span><span id="tzMyPart">-</span></div><div class="tz-c mono" id="tzMy">--:--</div></div>
+        <div class="tz"><div class="tz-h mono"><span id="tzYouLabel">У тебя</span><span id="tzYouPart">-</span></div><div class="tz-c mono" id="tzYou">--:--</div></div>
+      </div>
+      <div class="alert" id="tzDiff">Считаю…</div>
+    </div>
+    <div class="dlg-f">
+      <button class="btn outline sm" data-close>Закрыть</button>
+      <a class="btn primary sm" href="https://t.me/aurum2347" target="_blank" rel="noopener"><svg><use href="#i-tg"/></svg>Написать в Telegram</a>
+    </div>
+  </div>
+</div>
+
+<div class="overlay dialog" id="qrDlg" aria-hidden="true">
+  <div class="overlay-bg" data-close></div>
+  <div class="dlg-box" role="dialog" aria-labelledby="qrTitle">
+    <div class="dlg-h">
+      <h3 id="qrTitle">Telegram · ЛС</h3>
+      <button class="btn icon ghost sm" data-close aria-label="Закрыть"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="dlg-c qr-body">
+      <div class="qr-box" id="qrBox"></div>
+      <p class="qr-handle mono" id="qrHandle">@aurum2347</p>
+      <div class="tabs qr-tabs" id="qrTabs"></div>
+    </div>
+    <div class="dlg-f">
+      <button class="btn outline sm" id="qrCopy"><svg><use href="#i-copy"/></svg>Копировать</button>
+      <a class="btn primary sm" id="qrOpen" href="https://t.me/aurum2347" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg>Открыть</a>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
 
 </body>
 </html>
